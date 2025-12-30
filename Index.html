@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Podio 3D Clasificación</title>
+
+<style>
+
+@font-face{
+  font-family: "Silent Forest";
+  src: url("fonts/Silent Forest.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face{
+  font-family: "VAST_MX";
+  src: url("fonts/VAST_MX.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+*{box-sizing:border-box}
+
+:root{
+  --acento:#2fd4c7;
+}
+
+html, body{
+  width:100%;
+  height:100%;
+}
+
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  color:#fff;
+  background:
+    linear-gradient(rgba(20,40,45,.45), rgba(20,40,45,.55)),
+    url("fondoo.jpg");
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+}
+
+h1{
+  font-family: "VAST_MX", sans-serif;
+  font-size: 100px;
+  text-align:center;
+  margin:20px;
+  letter-spacing:3px;
+}
+
+h3{
+  font-family: "Silent Forest", sans-serif;
+  font-size: 400px;
+  text-align:center;
+  margin:20px;
+  letter-spacing:3px;
+}
+
+
+/* ===== LAYOUT ===== */
+.main{
+  display:flex;
+  gap:60px;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+/* ===== TABLA ===== */
+.table-wrap{
+  height:520px;
+  overflow-y:auto;
+  background:rgba(255,255,255,.1);
+  backdrop-filter: blur(8px);
+  border-radius:12px;
+  border:1px solid rgba(47,212,199,.4);
+  box-shadow:0 0 25px rgba(0,0,0,.35);
+}
+
+table{
+  border-collapse:collapse;
+  width:100%;
+}
+
+th,td{
+  padding:8px 14px;
+  border-bottom:1px solid rgba(255,255,255,.15);
+  text-align:center;
+}
+
+th{
+  position:sticky;
+  top:0;
+  background:rgba(0,0,0,.45);
+  color:var(--acento);
+}
+
+input{
+  background:rgba(0,0,0,.5);
+  color:#fff;
+  border:1px solid rgba(47,212,199,.5);
+  border-radius:6px;
+  text-align:center;
+  padding:4px;
+}
+
+input:focus{
+  outline:none;
+  box-shadow:0 0 10px rgba(47,212,199,.6);
+}
+
+.nombre-edit{
+  font-weight:700;
+  font-size:18px;
+  letter-spacing:0.3px;
+}
+
+
+th:first-child,
+td:first-child{
+  width:40px;
+  max-width:40px;
+  padding:6px 4px;
+}
+
+td input{
+  max-width:120px;
+  font-weight:600;
+}
+
+/* scrollbar */
+.table-wrap::-webkit-scrollbar{width:8px}
+.table-wrap::-webkit-scrollbar-thumb{
+  background:linear-gradient(#2fd4c7,#1aaea3);
+  border-radius:10px;
+}
+
+/* ===== PODIO 3D ===== */
+.podio-wrap{perspective:1000px}
+
+.podio{
+  display:flex;
+  align-items:flex-end;
+  gap:30px;
+  transform:rotateX(15deg);
+}
+
+.puesto{
+  width:170px;
+  text-align:center;
+}
+
+.bloque{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:64px;
+  font-weight:bold;
+  border-radius:10px 10px 0 0;
+  box-shadow:
+    inset 0 12px 0 rgba(255,255,255,.35),
+    inset 0 -18px 0 rgba(0,0,0,.35),
+    0 35px 45px rgba(0,0,0,.8);
+}
+
+/* alturas + colores */
+.p1 .bloque{
+  height:280px;
+  background:linear-gradient(145deg,#ffd700,#c9a300);
+}
+
+.p2 .bloque{
+  height:220px;
+  background:linear-gradient(145deg,#e5e5e5,#9f9f9f);
+}
+
+.p3 .bloque{
+  height:180px;
+  background:linear-gradient(145deg,#cd7f32,#8b4a1b);
+}
+
+.nombre{
+  margin-top:12px;
+  font-size:20px;
+  font-weight:bold;
+}
+
+.puntos{
+  font-size:15px;
+  opacity:.85;
+}
+
+.puesto:hover{
+  transform:translateY(-10px) scale(1.05);
+}
+
+.puesto:hover{
+  transform: translateY(-12px) scale(1.05);
+}
+
+.p1:hover .bloque{
+  box-shadow:
+    0 0 45px rgba(255,215,0,.95),
+    inset 0 12px 0 rgba(255,255,255,.5),
+    inset 0 -18px 0 rgba(0,0,0,.45),
+    0 40px 60px rgba(0,0,0,.9);
+}
+
+.p2:hover .bloque{
+  box-shadow:
+    0 0 40px rgba(220,220,220,.9),
+    inset 0 12px 0 rgba(255,255,255,.45),
+    inset 0 -18px 0 rgba(0,0,0,.45),
+    0 38px 58px rgba(0,0,0,.9);
+}
+
+.p3:hover .bloque{
+  box-shadow:
+    0 0 40px rgba(205,127,50,.9),
+    inset 0 12px 0 rgba(255,255,255,.45),
+    inset 0 -18px 0 rgba(0,0,0,.45),
+    0 38px 58px rgba(0,0,0,.9);
+}
+
+.sube{
+  animation:sube .6s ease;
+}
+
+.baja{
+  animation:baja .6s ease;
+}
+
+@keyframes sube{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-40px)}
+  100%{transform:translateY(0)}
+}
+
+@keyframes baja{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(40px)}
+  100%{transform:translateY(0)}
+}
+
+/* ===== BOTÓN FIN ===== */
+#btnFin{
+  margin:40px auto 0;
+  display:block;
+  padding:14px 44px;
+  font-size:22px;
+  font-weight:bold;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(145deg,#ffd700,#caa000);
+  cursor:pointer;
+  box-shadow:0 10px 30px rgba(0,0,0,.7);
+}
+#btnFin:hover{transform:scale(1.06)}
+
+/* ===== OVERLAY PANTALLA COMPLETA ===== */
+#finalOverlay{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at top,#222,#000 70%);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  overflow:hidden;
+}
+
+/* ===== GANADOR ===== */
+.ganadorBox{
+  text-align:center;
+  z-index:2;
+  animation:entrada .8s ease;
+}
+
+.ganadorBox h2{
+  font-size:50px;
+  color:#fff;
+  margin-bottom:10px;
+}
+
+
+.ganadorBox h3{
+  font-size:100px;
+  margin-bottom:25px;
+  text-shadow:0 0 30px gold;
+}
+
+/* ===== BOTÓN REINICIAR ===== */
+#btnReiniciar{
+  margin-top:20px;
+  padding:14px 44px;
+  font-size:22px;
+  font-weight:bold;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(145deg,#ffd700,#caa000);
+  cursor:pointer;
+  box-shadow:0 10px 30px rgba(0,0,0,.7);
+  transition:.25s;
+}
+
+#btnReiniciar:hover{
+  transform:scale(1.06);
+}
+
+/* ===== CONFETI ===== */
+.confetti{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+.confetti span{
+  position:absolute;
+  top:-20px;
+  width:10px;
+  height:14px;
+  animation:caer linear infinite;
+}
+
+@keyframes caer{
+  to{
+    transform:translateY(110vh) rotate(360deg);
+  }
+}
+
+@keyframes entrada{
+  from{transform:scale(.3);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+.tabla-extra{
+  margin-top:25px;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:12px;
+  padding:12px;
+  width:320px;
+  text-align:center;
+}
+
+.tabla-extra h3{
+  margin-bottom:10px;
+  font-size:18px;
+}
+
+#tablaExtra{
+  width:100%;
+  border-collapse:collapse;
+}
+
+#tablaExtra th,
+#tablaExtra td{
+  padding:6px;
+  border-bottom:1px solid rgba(255,255,255,.15);
+  font-size:14px;
+}
+
+.btn-fin{
+  margin-top:20px;
+  padding:14px 40px;
+  font-size:20px;
+  font-weight:700;
+  border-radius:14px;
+  border:none;
+  cursor:pointer;
+  background:linear-gradient(135deg,#ffd700,#ffb700);
+  color:#000;
+  box-shadow:0 0 20px rgba(255,215,0,.6);
+  transition:transform .2s, box-shadow .2s;
+}
+
+.btn-fin:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 35px rgba(255,215,0,.9);
+}
+
+.podio-container{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:25px;
+}
+
+.mini-tabla{
+  width:360px;
+  background:rgba(255,255,255,.1);
+  backdrop-filter: blur(6px);
+  border-radius:10px;
+  border:1px solid rgba(47,212,199,.4);
+}
+
+.mini-tabla table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.mini-tabla th,
+.mini-tabla td{
+  padding:8px;
+  text-align:center;
+  border-bottom:1px solid rgba(255,255,255,.15);
+}
+
+.mini-tabla th{
+  color:var(--acento);
+}
+
+.fin-central{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  margin:50px 0 40px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>🏆 CLASIFICACION</h1>
+
+<div class="main">
+
+<!-- TABLA -->
+<div class="table-wrap">
+<table id="tabla">
+<tr><th>#</th><th>Nombre</th><th>Puntos</th></tr>
+</table>
+</div>
+
+<!-- PODIO -->
+
+<div class="podio-container">
+
+<div class="podio-wrap">
+  <div class="podio">
+    <div class="puesto p2" id="puesto2">
+  <div class="bloque">2</div>
+  <div class="nombre" id="p2"></div>
+  <div class="puntos" id="pts2"></div>
+</div>
+
+<div class="puesto p1" id="puesto1">
+  <div class="bloque">1</div>
+  <div class="nombre" id="p1"></div>
+  <div class="puntos" id="pts1"></div>
+</div>
+
+<div class="puesto p3" id="puesto3">
+  <div class="bloque">3</div>
+  <div class="nombre" id="p3"></div>
+  <div class="puntos" id="pts3"></div>
+</div>
+  </div>
+</div>
+
+<!-- Tabla secundaria 5to, 6to, 7mo -->
+<div class="tabla-extra">
+  <h2>🏅 Otros lugares</h2>
+  <table id="tablaExtra">
+    <tr>
+      <th>Lugar</th>
+      <th>Nombre</th>
+      <th>Puntos</th>
+    </tr>
+    <tr>
+      <td>5°</td>
+      <td id="p5">—</td>
+      <td id="pts5">—</td>
+    </tr>
+    <tr>
+      <td>6°</td>
+      <td id="p6">—</td>
+      <td id="pts6">—</td>
+    </tr>
+    <tr>
+      <td>7°</td>
+      <td id="p7">—</td>
+      <td id="pts7">—</td>
+    </tr>
+  </table>
+</div>
+</div>
+
+</div>
+
+</div>
+
+<div class="fin-central">
+  <button id="btnFin" class="btn-fin">FIN</button>
+</div>
+
+
+<div id="finalOverlay">
+  <div class="ganadorBox">
+    <h1>🏆 FELICIDADES</h1>
+    <h2 id="nombreGanador">GANADOR</h2>
+<br>
+    <h3>FELIZ AÑO NUEVO 2026</h3>
+<br>
+    <button id="btnReiniciar">VOLVER A JUGAR</button>
+  </div>
+  <div class="confetti"></div>
+</div>
+
+<audio id="musicaGanador" preload="auto">
+  <source src="won.mp3" type="audio/mpeg">
+</audio>
+
+
+<script>
+
+const musica = document.getElementById("musicaGanador");
+const tabla = document.getElementById("tabla");
+const TOTAL_JUGADORES = 30;
+let jugadores = [];
+
+// Crear Jugador 1, 2, 3...
+for(let i=1;i<=TOTAL_JUGADORES;i++){
+  jugadores.push({nombre:`Jugador ${i}`, puntos:0});
+}
+
+function renderTabla(){
+  tabla.innerHTML = `
+    <tr>
+      <th>#</th>
+      <th>Nombre</th>
+      <th>Puntos</th>
+    </tr>
+  `;
+
+  jugadores.forEach((j,i)=>{
+    const row = tabla.insertRow();
+    row.innerHTML = `
+      <td>${i+1}</td>
+      <td class="nombre-edit" contenteditable
+          oninput="editarNombre(${i}, this.innerText)">
+          ${j.nombre}
+      </td>
+      <td>
+        <input type="number" value="${j.puntos}"
+               oninput="editarPuntos(${i}, this.value)">
+      </td>
+    `;
+  });
+}
+
+function editarNombre(i, valor){
+  jugadores[i].nombre = valor.trim() || `Jugador ${i+1}`;
+  actualizarPodio();
+}
+
+function editarPuntos(i, valor){
+  jugadores[i].puntos = parseInt(valor) || 0;
+  actualizarPodio();
+}
+
+let prevTop = [];
+const puestosDOM = [puesto1, puesto2, puesto3];
+
+
+function actualizarPodio(){
+  const orden = [...jugadores].sort((a,b)=>b.puntos-a.puntos);
+
+  const datos = [
+    {nombre:p1, puntos:pts1, box:puesto1},
+    {nombre:p2, puntos:pts2, box:puesto2},
+    {nombre:p3, puntos:pts3, box:puesto3}
+  ];
+
+  datos.forEach((el,i)=>{
+    if(!orden[i]) return;
+
+    const nombreActual = orden[i].nombre;
+
+    // reset animación
+    el.box.classList.remove("sube","baja");
+    void el.box.offsetWidth;
+
+    if(prevTop[i] && prevTop[i] !== nombreActual){
+      const prevIndex = prevTop.indexOf(nombreActual);
+      if(prevIndex > i) el.box.classList.add("sube");
+      else el.box.classList.add("baja");
+    }
+
+    el.nombre.innerText = nombreActual;
+    el.puntos.innerText = orden[i].puntos + " pts";
+  });
+
+  prevTop = orden.slice(0,3).map(j=>j.nombre);
+
+ /* 👇 AQUÍ VA 5°, 6°, 7° */
+
+  if(orden[4]){
+    p5.innerText = orden[4].nombre;
+    pts5.innerText = orden[4].puntos + " pts";
+  }
+  if(orden[5]){
+    p6.innerText = orden[5].nombre;
+    pts6.innerText = orden[5].puntos + " pts";
+  }
+  if(orden[6]){
+    p7.innerText = orden[6].nombre;
+    pts7.innerText = orden[6].puntos + " pts";
+  }
+}
+
+renderTabla();
+actualizarPodio();
+
+const btnFin = document.getElementById("btnFin");
+const overlay = document.getElementById("finalOverlay");
+const nombreGanador = document.getElementById("nombreGanador");
+const btnReiniciar = document.getElementById("btnReiniciar");
+const confettiBox = document.querySelector(".confetti");
+
+btnFin.addEventListener("click", () => {
+  const orden = [...jugadores].sort((a,b)=>b.puntos-a.puntos);
+  if(!orden[0]) return;
+
+  nombreGanador.innerText = orden[0].nombre;
+  overlay.style.display = "flex";
+
+  musica.pause();
+  musica.currentTime = 0;
+
+  musica.volume = 1.0;
+  musica.play().catch(e => {
+    console.log("Audio bloqueado:", e);
+  });
+
+  lanzarConfeti();
+});
+
+btnReiniciar.addEventListener("click", ()=>{
+  // Reiniciar jugadores
+  jugadores = [];
+  for(let i=1;i<=TOTAL_JUGADORES;i++){
+    jugadores.push({nombre:`Jugador ${i}`, puntos:0});
+  }
+
+  // Reiniciar tabla y podio
+  renderTabla();
+  actualizarPodio();
+
+  // Quitar overlay y confeti
+  overlay.style.display = "none";
+  confettiBox.innerHTML = "";
+
+  // Detener música
+  musica.pause();
+  musica.currentTime = 0;
+});
+
+
+function lanzarConfeti(){
+  confettiBox.innerHTML = "";
+  const colores = ["#ffd700","#c0c0c0","#cd7f32","#fff","#ff4d4d"];
+
+  for(let i=0;i<150;i++){
+    const c = document.createElement("span");
+    c.style.left = Math.random()*100+"vw";
+    c.style.background = colores[Math.floor(Math.random()*colores.length)];
+    c.style.animationDuration = (2+Math.random()*3)+"s";
+    c.style.opacity = Math.random();
+    confettiBox.appendChild(c);
+  }
+}
+
+</script>
+
+
+</body>
+</html>
