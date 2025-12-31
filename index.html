@@ -29,11 +29,8 @@
 
 html, body{
   width:100%;
-  height:100%;
   margin:0;
   background:#000;
-  overflow-x:hidden;   /* solo horizontal */
-  overflow-y:auto;     /* ✅ permite scroll vertical */
 }
 
 body{
@@ -66,12 +63,8 @@ h3{
 
 /* ===== LAYOUT ===== */
 .main{
-  min-height:100vh;   /* puede crecer */
-  display:flex;
-  gap:60px;
-  justify-content:center;
-  align-items:flex-start; /* IMPORTANTE */
-  padding:20px;
+  min-height:100vh;
+  overflow-y:auto;
 }
 
 /* ===== TABLA ===== */
@@ -269,13 +262,16 @@ td input{
 /* ===== OVERLAY PANTALLA COMPLETA ===== */
 #finalOverlay{
   position:fixed;
-  inset:0;
+  top:0;
+  left:0;
+  width:100%;
+  height:100dvh; /* 🔥 CLAVE PARA IPAD */
   background:radial-gradient(circle at top,#222,#000 70%);
   display:none;
   justify-content:center;
-  align-items:center;
+  align-items:flex-start;
   z-index:9999;
-  overflow:hidden;
+  overflow-y:auto;
 }
 
 /* ===== GANADOR ===== */
@@ -284,7 +280,7 @@ td input{
   z-index:2;
   animation:entrada .8s ease;
   position:relative;
-  min-height:100vh;
+  min-height:100dvh;
   display:flex;
   flex-direction:column;
   align-items:center;
