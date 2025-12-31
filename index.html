@@ -287,17 +287,17 @@ td input{
 
 /* ===== GANADOR ===== */
 .ganadorBox{
-  text-align:center;
-  z-index:2;
-  animation:entrada .8s ease;
-  position:relative;
-  min-height:100svh;
-  padding 40px 20px 120px;
+  height:100svh;              /* 👈 ALTURA REAL iOS */
+  max-height:100svh;
+  width:100%;
+  box-sizing:border-box;
+
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
-  padding-bottom:80px; /* espacio para círculos */
+  justify-content:space-between;
+
+  padding:40px 20px 60px;
 }
 
 .ganadorBox h2{
@@ -491,6 +491,30 @@ td input{
   margin-top:40px;
 }
 
+  @media (max-width:1024px){
+  .ganadorBox h1{
+    font-size:60px;
+  }
+
+  .ganadorBox h2{
+    font-size:48px;
+  }
+
+  .ganadorBox h3{
+    font-size:64px; /* 👈 AQUÍ ESTABA EL PROBLEMA */
+    text-align:center;
+  }
+
+  .fila-podio{
+    gap:30px;
+    margin-top:20px;
+  }
+
+  .circulo{
+    width:180px;
+    height:180px;
+  }
+}
 
 </style>
 </head>
@@ -792,3 +816,4 @@ document.addEventListener("click", () => {
 
 </body>
 </html>
+
