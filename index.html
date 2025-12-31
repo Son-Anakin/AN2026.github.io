@@ -30,10 +30,12 @@
 html, body{
   width:100%;
   height:100%;
+  margin:0;
+  background:#000;
+  overflow:hidden;
 }
 
 body{
-  margin:0;
   font-family:'Segoe UI',sans-serif;
   color:#fff;
   background:
@@ -41,7 +43,7 @@ body{
     url("fondoo.jpg");
   background-size:cover;
   background-position:center;
-  background-attachment:fixed;
+  background-repeat:no-repeat;
 }
 
 h1{
@@ -279,10 +281,17 @@ td input{
   text-align:center;
   z-index:2;
   animation:entrada .8s ease;
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding-bottom:80px; /* espacio para círculos */
 }
 
 .ganadorBox h2{
-  font-size:50px;
+  font-size:80px;
   color:#fff;
   margin-bottom:10px;
 }
@@ -423,6 +432,56 @@ td input{
   margin:50px 0 40px;
 }
 
+.laterales{
+  margin-top:40px;
+  display:flex;
+  gap:10px;
+  justify-content:center;
+}
+
+
+.circulo{
+  width:220px;
+  height:220px;
+  border:3px solid rgba(255,255,255,.9);
+  border-radius:50%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  backdrop-filter: blur(4px);
+  background:rgba(0,0,0,.25);
+}
+
+.puesto-2{
+  box-shadow:0 0 25px rgba(192,192,192,.7);
+}
+
+.puesto-3{
+  box-shadow:0 0 25px rgba(205,127,50,.7);
+}
+
+.medalla{
+  font-size:40px;
+  margin-bottom:10px;
+}
+
+.nombre-lugar{
+  font-size:22px;
+  font-weight:bold;
+  text-shadow:0 0 10px #000;
+}
+
+.fila-podio{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:60px;
+  margin-top:40px;
+}
+
+
 </style>
 </head>
 
@@ -475,6 +534,11 @@ td input{
       <th>Puntos</th>
     </tr>
     <tr>
+      <td>4°</td>
+      <td id="p4">—</td>
+      <td id="pts4">—</td>
+    </tr>
+    <tr>
       <td>5°</td>
       <td id="p5">—</td>
       <td id="pts5">—</td>
@@ -483,11 +547,6 @@ td input{
       <td>6°</td>
       <td id="p6">—</td>
       <td id="pts6">—</td>
-    </tr>
-    <tr>
-      <td>7°</td>
-      <td id="p7">—</td>
-      <td id="pts7">—</td>
     </tr>
   </table>
 </div>
@@ -504,12 +563,30 @@ td input{
 
 <div id="finalOverlay">
   <div class="ganadorBox">
-    <h1>🏆 FELICIDADES</h1>
+    <h1>🥇 FELICIDADES 🥇</h1>
     <h2 id="nombreGanador">GANADOR</h2>
+<br>
+<br>
 <br>
     <h3>FELIZ AÑO NUEVO 2026</h3>
 <br>
-    <button id="btnReiniciar">VOLVER A JUGAR</button>
+
+<div class="fila-podio">
+
+  <div class="circulo puesto-2">
+    <div class="medalla">🥈</div>
+    <div class="nombre-lugar" id="nombreSegundo">Jugador 2</div>
+  </div>
+
+  <button id="btnReiniciar">VOLVER A JUGAR</button>
+
+  <div class="circulo puesto-3">
+    <div class="medalla">🥉</div>
+    <div class="nombre-lugar" id="nombreTercero">Jugador 3</div>
+  </div>
+
+</div>
+
   </div>
   <div class="confetti"></div>
 </div>
@@ -518,9 +595,13 @@ td input{
   <source src="won.mp3" type="audio/mpeg">
 </audio>
 
+<audio id="musicaFondo" loop>
+  <source src="fondo.mp3" type="audio/mpeg">
+</audio>
 
 <script>
 
+const musicaFondo = document.getElementById("musicaFondo");
 const musica = document.getElementById("musicaGanador");
 const tabla = document.getElementById("tabla");
 const TOTAL_JUGADORES = 30;
@@ -602,6 +683,10 @@ function actualizarPodio(){
 
  /* 👇 AQUÍ VA 5°, 6°, 7° */
 
+  if(orden[3]){
+    p4.innerText = orden[3].nombre;
+    pts4.innerText = orden[3].puntos + " pts";
+  }
   if(orden[4]){
     p5.innerText = orden[4].nombre;
     pts5.innerText = orden[4].puntos + " pts";
@@ -609,10 +694,6 @@ function actualizarPodio(){
   if(orden[5]){
     p6.innerText = orden[5].nombre;
     pts6.innerText = orden[5].puntos + " pts";
-  }
-  if(orden[6]){
-    p7.innerText = orden[6].nombre;
-    pts7.innerText = orden[6].puntos + " pts";
   }
 }
 
@@ -630,15 +711,21 @@ btnFin.addEventListener("click", () => {
   if(!orden[0]) return;
 
   nombreGanador.innerText = orden[0].nombre;
+document.getElementById("nombreSegundo").innerText =
+  orden[1] ? orden[1].nombre : "—";
+
+document.getElementById("nombreTercero").innerText =
+  orden[2] ? orden[2].nombre : "—";
   overlay.style.display = "flex";
 
-  musica.pause();
-  musica.currentTime = 0;
+  // detener música fondo
+  musicaFondo.pause();
+  musicaFondo.currentTime = 0;
 
-  musica.volume = 1.0;
-  musica.play().catch(e => {
-    console.log("Audio bloqueado:", e);
-  });
+  // reproducir música ganador
+  musica.currentTime = 0;
+  musica.volume = 1;
+  musica.play();
 
   lanzarConfeti();
 });
@@ -661,6 +748,8 @@ btnReiniciar.addEventListener("click", ()=>{
   // Detener música
   musica.pause();
   musica.currentTime = 0;
+
+  musicaFondo.play();
 });
 
 
@@ -677,6 +766,16 @@ function lanzarConfeti(){
     confettiBox.appendChild(c);
   }
 }
+
+let musicaIniciada = false;
+
+document.addEventListener("click", () => {
+  if (!musicaIniciada) {
+    musicaFondo.volume = 1.0;
+    musicaFondo.play().catch(()=>{});
+    musicaIniciada = true;
+  }
+}, { once:true });
 
 </script>
 
