@@ -94,6 +94,11 @@ table{
   width:100%;
 }
 
+  body.overlay-activo{
+  overflow:hidden;
+  height:100svh;
+}
+
 th,td{
   padding:8px 14px;
   border-bottom:1px solid rgba(255,255,255,.15);
@@ -752,6 +757,7 @@ document.getElementById("nombreSegundo").innerText =
 document.getElementById("nombreTercero").innerText =
   orden[2] ? orden[2].nombre : "—";
   overlay.style.display = "flex";
+  document.body.classList.add("overlay-activo");
 
   // detener música fondo
   musicaFondo.pause();
@@ -785,6 +791,8 @@ btnReiniciar.addEventListener("click", ()=>{
   musica.currentTime = 0;
 
   musicaFondo.play();
+
+  document.body.classList.remove("overlay-activo");
 });
 
 
@@ -817,5 +825,6 @@ document.addEventListener("click", () => {
 
 </body>
 </html>
+
 
 
